@@ -31,7 +31,6 @@ public class Play extends JFrame {
 	private Font fonts;
 	
 	private ArrayList<String> englishWord = new ArrayList<String>();
-	private ArrayList<String> indonesianWord = new ArrayList<String>();
 	private ArrayList<String> currentWord = new ArrayList<String>();
 	private ArrayList<JLabel> spaceword = new ArrayList<JLabel>();
 	private ArrayList<Integer> cpslist = new ArrayList<Integer>();
@@ -46,7 +45,7 @@ public class Play extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Play frame = new Play();
+					Play frame = new Play(1);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -58,13 +57,14 @@ public class Play extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public Play() throws Exception {
+	public Play(int lang) throws Exception {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 800, 600);
 		setTitle("SpaceTyping - Classic v0.1 Beta [ENG]");
 		setLocationRelativeTo(null);
-		
-		readText("english.txt",0);
+		if(lang==1)
+			readText("english.txt");
+		if(lang==0) readText("indonesian.txt");
 		fonts = Font.createFont(Font.TRUETYPE_FONT, new File("Fonts\\MorePerfectDOSVGA.ttf"));;
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Fonts\\MorePerfectDOSVGA.ttf")));
@@ -184,6 +184,17 @@ public class Play extends JFrame {
 							for(JLabel fail : spaceword) {
 								fail.setVisible(false);
 							}
+							try{
+								m.stop();
+								m = null;
+								mx.stop();
+								mx = null;
+								FailMenu fm = new FailMenu(lblScore,lblWordCount);
+								fm.setVisible(true);
+								dispose();
+							}catch(Exception e) {
+								
+							}
 							timer.cancel();
 							timer.purge();
 							return;
@@ -225,14 +236,13 @@ public class Play extends JFrame {
 			}, 0,1000);
 	}
 	
-	public void readText(String path,int f) {
+	public void readText(String path) {
 		try {
 			File file = new File("Lang\\" + path);
 			BufferedReader br = new BufferedReader(new FileReader(file));
 			String st;
 			while ((st = br.readLine()) != null) {
-				if(f==0) englishWord.add(st);
-				else indonesianWord.add(st);
+				englishWord.add(st);
 			}
 		} catch(IOException e) {
 			

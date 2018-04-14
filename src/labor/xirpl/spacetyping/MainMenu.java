@@ -6,6 +6,7 @@ import java.awt.Font;
 import java.awt.GraphicsEnvironment;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.WindowEvent;
 import java.io.File;
 
 import javafx.scene.media.Media;
@@ -21,7 +22,7 @@ import javax.swing.border.EmptyBorder;
 public class MainMenu extends JFrame {
 
 	private JPanel contentPane;
-
+	private MediaPlayer player;
 	/**
 	 * Launch the application.
 	 */
@@ -88,7 +89,7 @@ public class MainMenu extends JFrame {
 		JLabel arrow = new JLabel("=>");
 		arrow.setFont(fonts);
 		arrow.setForeground(Color.LIGHT_GRAY);
-		playSound("menu.mp3");
+		playMenu("menu.mp3");
 		this.addKeyListener(new KeyListener() {
 			boolean f = false;
 			@Override
@@ -109,7 +110,28 @@ public class MainMenu extends JFrame {
 				}
 				if(key.getKeyCode() == KeyEvent.VK_ENTER) {
 					if(f) {
+						try{
+							
+							player.stop();
+							player = null;
+							Play game = new Play(1);
+							game.setVisible(true);
+							dispose();
+						}catch(Exception e) {
+							
+						}
 						
+					} else {
+						try {
+							player.stop();
+							player = null;
+							Play game = new Play(0);
+							game.setVisible(true);
+							
+							dispose();
+						} catch(Exception e) {
+							
+						}
 					}
 				}
 			}
@@ -136,11 +158,20 @@ public class MainMenu extends JFrame {
 		lblCopyrightC.setForeground(Color.LIGHT_GRAY);
 		lblCopyrightC.setBounds(10, 536, lblCopyrightC.getPreferredSize().width, lblCopyrightC.getPreferredSize().height);
 		contentPane.add(lblCopyrightC);
+	
 	}
 	
 	public void playSound(String path) {
 		new javafx.embed.swing.JFXPanel();
 	    String uriString = new File("Sounds\\"+path).toURI().toString();
 	    new MediaPlayer(new Media(uriString)).play();
+	}
+	
+	public void playMenu(String path) {
+		new javafx.embed.swing.JFXPanel();
+	    String uriString = new File("Sounds\\"+path).toURI().toString();
+	    Media med = new Media(uriString);
+	    player = new MediaPlayer(med);
+	    player.play();
 	}
 }
